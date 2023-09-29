@@ -1,15 +1,11 @@
-from typing import Any
-
 from adminsortable2.admin import SortableAdminMixin
 from django.contrib import admin
-from django.db.models.query import QuerySet
-from django.http.request import HttpRequest
+from django.db.models import Sum
 from django.template.response import TemplateResponse
 from django.utils.html import format_html
 
 from .models import Budget, Category, Payment
 from .utils import currency_convert
-from django.db.models import Sum
 
 
 class PaymentAdminInline(admin.TabularInline):
@@ -29,7 +25,7 @@ class BudgetAdmin(admin.ModelAdmin):
         "get_actual_amount",
         "get_total_paid",
         "get_balance",
-        "get_payments"
+        "get_payments",
     )
     list_display_links = ("name",)
 
@@ -41,13 +37,17 @@ class BudgetAdmin(admin.ModelAdmin):
         total_paid = sum(i.total_paid for i in budget_items)
         total_balance = sum(i.balance for i in budget_items if i.balance)
         data = {
-            "total_estimated_cost": currency_convert(total_estimated_cost["estimated_amount__sum"]),
-            "total_actual_cost": currency_convert(total_actual_cost["actual_amount__sum"]),
+            "total_estimated_cost": currency_convert(
+                total_estimated_cost["estimated_amount__sum"]
+            ),
+            "total_actual_cost": currency_convert(
+                total_actual_cost["actual_amount__sum"]
+            ),
             "total_paid": currency_convert(total_paid),
             "total_balance": currency_convert(total_balance),
         }
         extra_context.update(data)
-        
+
         return super().changelist_view(request, extra_context)
 
     def get_actions(self, request):
@@ -96,7 +96,13 @@ class BudgetAdmin(admin.ModelAdmin):
 
 
 class CategoryAdmin(SortableAdminMixin, admin.ModelAdmin):
-    list_display = ("name", "get_budget_count", "get_category_estimated_cost", "get_items", "order")
+    list_display = (
+        "name",
+        "get_budget_count",
+        "get_category_estimated_cost",
+        "get_items",
+        "order",
+    )
 
     def get_actions(self, request):
         actions = super().get_actions(request)
@@ -107,7 +113,7 @@ class CategoryAdmin(SortableAdminMixin, admin.ModelAdmin):
     @admin.display(description="Estimated")
     def get_category_estimated_cost(self, obj):
         return currency_convert(obj.category_estimated_cost)
-    
+
     @admin.display(description="Items")
     def get_items(self, obj):
         return list(obj.budget_set.all())

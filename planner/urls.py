@@ -17,13 +17,17 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, reverse_lazy
+from django.views.generic.base import RedirectView
 
 admin.site.site_header = "Budget Planner"
 admin.site.site_title = "Budget Planner"
 admin.site.index_title = "Admin"
 
-urlpatterns = [path("admin/", admin.site.urls)]
+urlpatterns = [
+    path("", RedirectView.as_view(url=reverse_lazy("admin:index"))),
+    path("admin/", admin.site.urls),
+]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

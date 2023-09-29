@@ -4,19 +4,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('budget', '0001_initial'),
+        ("budget", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='budget',
-            options={'ordering': ['order']},
+            name="budget",
+            options={"ordering": ["order"]},
         ),
         migrations.AddField(
-            model_name='budget',
-            name='order',
+            model_name="budget",
+            name="order",
             field=models.PositiveSmallIntegerField(default=0),
         ),
     ]

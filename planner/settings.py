@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "adminsortable2",
     "budget",
+    "guest",
 ]
 
 MIDDLEWARE = [

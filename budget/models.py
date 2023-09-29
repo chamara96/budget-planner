@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import Sum
 
+
 class TimeStampMixin(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -15,7 +16,7 @@ class Category(TimeStampMixin):
 
     @property
     def category_estimated_cost(self):
-        total = self.budget_set.aggregate(Sum('estimated_amount'))
+        total = self.budget_set.aggregate(Sum("estimated_amount"))
         return total["estimated_amount__sum"]
 
     def __str__(self):
@@ -36,7 +37,7 @@ class Budget(TimeStampMixin):
     order = models.PositiveSmallIntegerField(default=0, blank=False, null=False)
 
     class Meta:
-        ordering = ["category__order","order","id"]
+        ordering = ["category__order", "order", "id"]
 
     @property
     def payments(self):

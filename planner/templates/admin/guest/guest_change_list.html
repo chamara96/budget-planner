@@ -6,31 +6,11 @@
 {{ media.js }}
 <script src="{% static 'admin/js/filters.js' %}" defer></script>
 <style>
-  .column-get_estimated_amount,
-  .column-get_actual_amount,
-  .column-get_total_paid,
-  .column-get_balance,
-  .field-get_estimated_amount,
-  .field-get_actual_amount,
-  .field-get_total_paid,
-  .field-get_balance {
-    text-align: right;
-  }
-
-  .table-borderless th,
-  .table-borderless td,
-  .table-borderless thead th,
-  .table-borderless tbody+tbody {
-    border: 0;
-  }
-
-  .column-get_payments {
-    text-align: center;
-    width: 30% !important;
-  }
-
   .text-right {
     text-align: right;
+  }
+  .text-center {
+    text-align: center;
   }
 
   .w-25 {
@@ -66,31 +46,53 @@
   .row-color2{
     background: var(--body-bg) !important;
   }
+
+  .custom-action-invited {
+    padding-left: 16px;
+    background: url(/static/admin/img/search.svg) 0 1px no-repeat;
+  }
+  .custom-action-pending {
+    padding-left: 16px;
+    background: url(/static/admin/img/icon-clock.svg) 0 1px no-repeat;
+  }
+  .custom-action-confirmed {
+    padding-left: 16px;
+    background: url(/static/admin/img/icon-yes.svg) 0 1px no-repeat;
+  }
+  .custom-action-calceled {
+    padding-left: 16px;
+    background: url(/static/admin/img/icon-deletelink.svg) 0 1px no-repeat;
+  }
 </style>
 
 {% endblock %}
 
 {% block content_title %}
-<h1> Budget Summary </h1>
-<p>{{base_change_list_template}}</p>
+<h1> Guest Summary </h1>
+
 <table>
-  <tr>
-    <td>Total Estimated Cost</td>
-    <td class="text-right"><strong>{{total_estimated_cost}}</strong></td>
-  </tr>
-  <tr>
-    <td>Total Actual Cost</td>
-    <td class="text-right"><strong>{{total_actual_cost}}</strong></td>
-  </tr>
-  <tr>
-    <td>Total Paid</td>
-    <td class="text-right"><strong>{{total_paid}}</strong></td>
-  </tr>
-  <tr>
-    <td>Total Balance</td>
-    <td class="text-right"><strong>{{total_balance}}</strong></td>
-  </tr>
+  <thead>
+    <tr>
+      <th scope="col" style="padding: 0;">&nbsp;</th>
+      {% for s in status %}<th scope="col" class="text-center" style="padding: 0;"><div class="text"><a href="#">{{s.1}}</a></div></th>{% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for g in guest_list_summery %}
+    <tr>
+      <td>{{g.category}}</td>
+      {% for d in g.data %}<td class="text-center">{{d.count}}</td>{% endfor %}
+    </tr>
+    {% endfor %}
+    <tr>
+      <th class="text-right">Total:</th>
+      {% for ss in status_summery %}<th class="text-center">{{ss.count}}</th>{% endfor %}
+    </tr>
+  </tbody>
 </table>
+<br>
+<ul><li>Liquor Count: <strong>{{liquor_count}}</strong></li></ul>
+
 <br>
 {% endblock %}
 
@@ -130,3 +132,7 @@
   }
 </script>
 {% endblock %}
+
+
+
+{% block pagination %}{% pagination cl %}{% endblock %}
