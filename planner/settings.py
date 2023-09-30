@@ -32,11 +32,6 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
-    # 'jazzmin',
-    # 'admin_volt.apps.AdminVoltConfig',
-    # 'django_admin_tailwind',
-    # "admin_interface",
-    # "colorfield",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
