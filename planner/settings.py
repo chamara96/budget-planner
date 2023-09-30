@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "adminsortable2",
     "budget",
     "guest",
+    "logbook",
 ]
 
 MIDDLEWARE = [
