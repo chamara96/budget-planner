@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "budget",
     "guest",
     "logbook",
+    "event",
 ]
 
 MIDDLEWARE = [
