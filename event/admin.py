@@ -9,7 +9,7 @@ class CategoryAdmin(SortableAdminMixin, admin.ModelAdmin):
 
     @admin.display(description="Sub Categories")
     def get_sub_categories(self, obj):
-        return list(obj.subcategory_set.all())
+        return list(obj.subcategory_set.values_list("name", flat=True))
 
     def get_actions(self, request):
         actions = super().get_actions(request)

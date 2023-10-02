@@ -17,8 +17,12 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.auth.models import Group, User
 from django.urls import path, reverse_lazy
 from django.views.generic.base import RedirectView
+
+admin.site.unregister(User)
+admin.site.unregister(Group)
 
 admin.site.site_header = "Budget Planner"
 admin.site.site_title = "Budget Planner"
