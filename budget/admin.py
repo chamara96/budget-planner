@@ -16,6 +16,10 @@ class PaymentAdminInline(admin.TabularInline):
 class BudgetAdmin(admin.ModelAdmin):
     inlines = (PaymentAdminInline,)
 
+    list_filter = [
+        "category",
+    ]
+
     change_list_template = "admin/budget/budget_change_list.html"
 
     list_display = (
@@ -31,7 +35,7 @@ class BudgetAdmin(admin.ModelAdmin):
 
     def changelist_view(self, request, extra_context=None) -> TemplateResponse:
         extra_context = extra_context or {}
-        budget_items = Budget.objects.all()
+        budget_items = Budget.objects.filter(**request.GET.dict())
         total_estimated_cost = budget_items.aggregate(Sum("estimated_amount"))
         total_actual_cost = budget_items.aggregate(Sum("actual_amount"))
         total_paid = sum(i.total_paid for i in budget_items)

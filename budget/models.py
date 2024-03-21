@@ -65,3 +65,6 @@ class Payment(TimeStampMixin):
 
     def __str__(self):
         return self.note + " - " + str(self.amount)
+
+    class Meta:
+        ordering = ("date",)

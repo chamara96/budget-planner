@@ -102,7 +102,7 @@
   var table = document.getElementById("result_list");
 
   // Get all the rows in the table body
-  var rows = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+  var rows = table.getElementsByTagName("tbody")[0].children;
 
   // Initialize variables to keep track of the last value in the first column
   var lastValue = "";

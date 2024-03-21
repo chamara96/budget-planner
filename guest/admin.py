@@ -28,6 +28,11 @@ class GuestAdmin(admin.ModelAdmin):
         "status",
         "row_actions",
     )
+    list_filter = [
+        "category",
+        "status",
+        "drinks",
+    ]
     list_display_links = ("name",)
     change_list_template = "admin/guest/guest_change_list.html"
 
