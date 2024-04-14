@@ -35,6 +35,7 @@ class GuestAdmin(admin.ModelAdmin):
     ]
     list_display_links = ("name",)
     change_list_template = "admin/guest/guest_change_list.html"
+    list_per_page = 300
 
     def get_urls(self):
         urls = super().get_urls()
