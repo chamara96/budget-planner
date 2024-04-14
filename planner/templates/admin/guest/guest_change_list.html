@@ -74,7 +74,10 @@
   <thead>
     <tr>
       <th scope="col" style="padding: 0;">&nbsp;</th>
-      {% for s in status %}<th scope="col" class="text-center" style="padding: 0;"><div class="text"><a href="#">{{s.1}}</a></div></th>{% endfor %}
+      {% for s in status %}
+      <th scope="col" class="text-center" style="padding: 0;"><div class="text"><a href="#">{{s.1}}</a></div></th>
+      {% endfor %}
+      <th scope="col" class="text-center bg-primary" style="padding: 0;"><div class="text"><a href="#"><strong>All</strong></a></div></th>
     </tr>
   </thead>
   <tbody>

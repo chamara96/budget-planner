@@ -80,6 +80,8 @@ class GuestAdmin(admin.ModelAdmin):
             }
             for s in status
         ]
+        status_summery.append({"status": "ALL", "count": guest_list.count()})
+
         summery = []
         for c in categories:
             temp = {}
@@ -99,6 +101,13 @@ class GuestAdmin(admin.ModelAdmin):
                 }
                 for s in status
             ]
+            temp["data"].append(
+                {
+                    "status": "ALL",
+                    "count": Guest.objects.filter(category__name=c["name"]).count(),
+                }
+            )
+
             summery.append(temp)
         extra_context.update(
             {

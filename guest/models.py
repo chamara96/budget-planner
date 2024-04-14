@@ -39,5 +39,5 @@ class Guest(TimeStampMixin):
         return self.name
 
     class Meta:
-        ordering = ["category__order", "order", "id"]
+        ordering = ["category__order", "order", "name"]
         verbose_name_plural = " Guest List"
