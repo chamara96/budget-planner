@@ -81,7 +81,12 @@ class GuestAdmin(admin.ModelAdmin):
             }
             for s in status
         ]
-        status_summery.append({"status": "ALL", "count": guest_list.count()})
+        status_summery.append(
+            {
+                "status": "ALL",
+                "count": sum(item["count"] for item in guest_list_summery),
+            }
+        )
 
         summery = []
         for c in categories:
@@ -105,7 +110,11 @@ class GuestAdmin(admin.ModelAdmin):
             temp["data"].append(
                 {
                     "status": "ALL",
-                    "count": Guest.objects.filter(category__name=c["name"]).count(),
+                    "count": sum(
+                        item["count"]
+                        for item in guest_list_summery
+                        if item["category__name"] == c["name"]
+                    ),
                 }
             )
 
