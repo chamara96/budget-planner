@@ -1,6 +1,8 @@
 from django.db import models
 from django.db.models import Sum
 
+from budget.utils import currency_convert
+
 
 class TimeStampMixin(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -58,10 +60,23 @@ class Budget(TimeStampMixin):
 
 
 class Payment(TimeStampMixin):
+    class Payer(models.IntegerChoices):
+        OTHER = 0, "Other"
+        GROOM = 1, "Groom"
+        BRIDE = 2, "Bride"
+
     budget = models.ForeignKey(Budget, on_delete=models.CASCADE)
     amount = models.IntegerField()
+    paid_by = models.PositiveSmallIntegerField(
+        choices=Payer.choices,
+        default=Payer.GROOM,
+    )
     note = models.CharField(max_length=255, null=True, default=None, blank=True)
     date = models.DateField(null=True, default=None, blank=True)
+
+    @property
+    def display_amount(self):
+        return currency_convert(self.amount)
 
     def __str__(self):
         return self.note + " - " + str(self.amount)

@@ -1,0 +1,81 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_list %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static "admin/css/changelists.css" %}">
+  {% if cl.formset %}
+    <link rel="stylesheet" href="{% static "admin/css/forms.css" %}">
+  {% endif %}
+  {% if cl.formset or action_form %}
+    <script src="{% url 'admin:jsi18n' %}"></script>
+  {% endif %}
+  {{ media.css }}
+  {% if not actions_on_top and not actions_on_bottom %}
+    <style>
+      #changelist table thead th:first-child {width: inherit}
+    </style>
+  {% endif %}
+{% endblock %}
+
+
+{% block content %}
+
+<h1>Expenses Summary</h1>
+
+<table>
+    {% for py in payer_summary %}
+    <tr>
+        <td>{{py.name}}</td>
+        <td class="text-right"><strong>{{py.amount}}</strong></td>
+    </tr>
+    {% endfor %}
+</table>
+<br>
+
+<div id="content-main">
+    <div class="module" id="changelist">
+        <div class="changelist-form-container">
+            <div class="results">
+                <table id="result_list">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="column-lable">
+                                <div class="text"><a href="#">Category</a></div>
+                            </th>
+                            <th scope="col" class="column-lable">
+                                <div class="text"><a href="#">Item</a></div>
+                            </th>
+                            <th scope="col" class="column-note">
+                                <div class="text"><a href="#">Note</a></div>
+                            </th>
+                            <th scope="col" class="column">
+                                <div class="text" style="text-align: right; padding-right: 10%;"><a href="#">Amount</a></div>
+                            </th>
+                            <th scope="col" class="column">
+                                <div class="text"><a href="#">Paid By</a></div>
+                            </th>
+                            <th scope="col" class="column sorted">
+                                <div class="text"><a href="#">Date</a></div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in payments %}
+                        <tr>
+                            <th>{{p.budget.category.name}}</th>
+                            <th>{{p.budget.name}}</th>
+                            <td>{{p.note}}</td>
+                            <td style="text-align: right; padding-right: 2%;">{{p.display_amount}}</td>
+                            <td>{{p.get_paid_by_display}}</td>
+                            <td>{{p.date}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -94,6 +94,10 @@
 <br>
 {% endblock %}
 
+{% block object-tools-items %}
+<li><a href="/admin/budget/budget/expenses/" style="background-color: #ffc107;color: black;">Expenses</a></li>
+{{ block.super }}
+{% endblock %}
 
 {% block footer %}
 {{ block.super }}

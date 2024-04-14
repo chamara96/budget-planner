@@ -2,6 +2,7 @@ from adminsortable2.admin import SortableAdminMixin
 from django.contrib import admin
 from django.db.models import Sum
 from django.template.response import TemplateResponse
+from django.urls import path
 from django.utils.html import format_html
 
 from .models import Budget, Category, Payment
@@ -32,6 +33,34 @@ class BudgetAdmin(admin.ModelAdmin):
         "get_payments",
     )
     list_display_links = ("name",)
+
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [path("expenses/", self.admin_site.admin_view(self.expenses_view))]
+        return my_urls + urls
+
+    def expenses_view(self, request):
+        payments = Payment.objects.prefetch_related("budget").order_by("-date")
+        payer_totals = Payment.objects.values("paid_by").annotate(
+            total_amount=Sum("amount")
+        )
+        payer_summary = []
+        for payer_total in payer_totals:
+            payer = payer_total["paid_by"]
+
+            payer_summary.append(
+                {
+                    "name": Payment.Payer(payer).label,
+                    "amount": currency_convert(payer_total["total_amount"]),
+                }
+            )
+
+        context = dict(
+            self.admin_site.each_context(request),
+            payer_summary=payer_summary,
+            payments=payments,
+        )
+        return TemplateResponse(request, "admin/budget/budget_expenses.html", context)
 
     def changelist_view(self, request, extra_context=None) -> TemplateResponse:
         extra_context = extra_context or {}
