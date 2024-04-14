@@ -55,10 +55,13 @@ class BudgetAdmin(admin.ModelAdmin):
                 }
             )
 
+        total_payment = payments.aggregate(Sum("amount"))
+
         context = dict(
             self.admin_site.each_context(request),
             payer_summary=payer_summary,
             payments=payments,
+            total_payment=currency_convert(total_payment["amount__sum"]),
         )
         return TemplateResponse(request, "admin/budget/budget_expenses.html", context)
 
