@@ -38,6 +38,7 @@ class LiquorNoteFilter(admin.SimpleListFilter):
 
 
 class GuestAdmin(admin.ModelAdmin):
+    exclude = ("drinks",)
     list_display = (
         "category",
         "name",
