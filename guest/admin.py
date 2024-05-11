@@ -1,3 +1,5 @@
+import re
+
 from adminsortable2.admin import SortableAdminMixin
 from django.contrib import admin, messages
 from django.db.models import Sum
@@ -18,20 +20,36 @@ class CategoryAdmin(SortableAdminMixin, admin.ModelAdmin):
         return actions
 
 
+class LiquorNoteFilter(admin.SimpleListFilter):
+    title = "Liquors"
+    parameter_name = "liquor"
+
+    def lookups(self, request, model_admin):
+        return (
+            ("true", "Get Liquors"),
+            ("false", "Others"),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == "true":
+            return queryset.filter(note__icontains="Liquor:")
+        elif self.value() == "false":
+            return queryset.exclude(note__icontains="Liquor:")
+
+
 class GuestAdmin(admin.ModelAdmin):
     list_display = (
         "category",
         "name",
         "count",
         "note",
-        "drinks",
         "status",
         "row_actions",
     )
     list_filter = [
         "category",
         "status",
-        "drinks",
+        LiquorNoteFilter,
     ]
     list_display_links = ("name",)
     change_list_template = "admin/guest/guest_change_list.html"
@@ -64,7 +82,8 @@ class GuestAdmin(admin.ModelAdmin):
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
         guest_list = Guest.objects.all()
-        liquor_count = guest_list.filter(drinks=True).count()
+        # liquor_count = guest_list.filter(drinks=True).count()
+        liquor_count = self._get_total_from_note(guest_list, r"Liquor:\s*(\d+)")
         categories = Category.objects.values("name")
         status = Guest.Status.choices
         guest_list_summery = guest_list.values("category__name", "status").annotate(
@@ -128,6 +147,16 @@ class GuestAdmin(admin.ModelAdmin):
             }
         )
         return super().changelist_view(request, extra_context)
+
+    def _get_total_from_note(self, guest_list, regex):
+        records_with_note = guest_list.exclude(note=None)
+        total_count = 0
+
+        for record in records_with_note:
+            matches = re.findall(regex, record.note)
+            if matches:
+                total_count += sum(map(int, matches))
+        return total_count
 
     def get_actions(self, request):
         actions = super().get_actions(request)
