@@ -78,7 +78,9 @@ class GuestAdmin(admin.ModelAdmin):
                 messages.warning(request, "Invalid Status")
         except self.model.DoesNotExist:
             messages.warning(request, "Not found")
-        return HttpResponseRedirect("/admin/guest/guest")
+        return HttpResponseRedirect(
+            request.META.get("HTTP_REFERER", "/admin/guest/guest")
+        )
 
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
